@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+
+# NOTE: this thing needs documented, badly :-)
+# and cleaned up. Rolling it out as is cause we're in a hurry.
+# The code, however, does the job (the lib is the important part anyway).
+
+use strict;
+use Data::JavaScript::Compactor;
+
+my $DEBUG = 0;
+
+my $usage = "$0 [input file] <[output file]>";
+
+if ( ($ARGV[0] =~ /^--?h(elp)?$/i) || (! length($ARGV[0])) ){
+    print $usage."\n";
+    exit;
+}
+
+
+&Main();
+
+sub Main
+{
+    my $infile = $ARGV[0];
+    die "Unable to read file [$infile]\n$usage" unless -r $infile;
+
+    my $outfile = $ARGV[1];
+    if ($outfile)
+    {
+        if (-e $outfile) {
+            print STDERR "WARNING: output file [$outfile] exists. Overwritting in 10 seconds.\n";
+            sleep 10;
+        }
+        open(OUT, "> $outfile") or die "Unable to open output file [$outfile]\n";
+    } else {
+        *OUT = *STDOUT;
+    }
+
+    print STDERR "Reading in files...\n" if $DEBUG;
+    die "Unable to read file [$infile]\n$usage" unless open(IN,"< $infile");
+
+    # slurp in the input
+    my $data;
+    { local($/); $data = <IN>; }
+    close IN;
+
+    my %opts = ( DEBUG => $DEBUG );
+    print OUT Data::JavaScript::Compactor->compact($data, %opts);
+
+    close OUT if $outfile;
+}
+
+

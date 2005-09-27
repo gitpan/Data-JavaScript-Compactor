@@ -1,0 +1,68 @@
+Data-JavaScript-Compactor
+=========================
+
+This module provides methods to compact javascript source down to just
+what is needed. It can remove all comments, put everything on one line
+(semi-)safely, and remove extra whitespace.
+
+SYNOPSIS
+        use Data::JavaScript::Compactor;
+        my $compacted = Data::JavaScript::Compactor->compact( $javascript )
+           or die $Data::JavaScript::Compactor::err_msg;
+
+       # OR, to just do a few steps #
+
+        my $c = Data::JavaScript::Compactor->new();
+        $c->data( $javascript );
+        $c->replace_listeral_strings();
+        $c->replace_white_space();
+        my $new = $c->data();
+
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+
+BUGS
+
+There are a few bugs, which may rear their head in some minor situations.
+
+Statements not terminated by semi-colon.
+    Javascript statement that are NOT terminated by a semi-colon (";")
+    may break once compacted, as they will be put on the same line as
+    the following statement. In many cases, this wonâbe a problem,
+    but it could cause an issue. Ex.
+
+        i = 5.4
+        j = 42
+
+    The above would become "i=5.4 j=42", and would generate an error
+    along the lines of "expected â before statement".
+
+Ambiguous operator precidence
+    Operator precidence may get screwed up in ambiguous statements. Eg.
+    "x = y + ++b;" will be compacted into "x=y+++b;", which means something
+    different.
+
+
+AUTHOR
+
+Joshua I. Miller <jmiller@puriifeddata.net>
+
+
+COPYRIGHT AND LICENSE
+
+Copyright (c) 2005 by CallTech Communications, Inc.
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, either Perl version 5.8.3 or, at
+your option, any later version of Perl 5 you may have available.
+
+
+

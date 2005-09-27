@@ -1,0 +1,6 @@
+Revision history for Perl extension Data::JavaScript::Compactor.
+
+0.01  Tue Sep 27 10:38:18 2005
+	- original version; created by h2xs 1.23 with options
+		-b 5.5.3 -Afn Data::JavaScript::Compactor
+
